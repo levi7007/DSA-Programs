@@ -1,0 +1,2760 @@
+<html>
+<head>
+<title>Trees</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background:  #e8ebef;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1 {
+    text-align: center;
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    margin: 0;
+  }
+
+  .program {
+    background: white;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 800px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+  }
+
+  .program h2 {
+    color: #4CAF50;
+    margin-top: 0;
+  }
+
+  .question {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  pre {
+    background: #272822;
+    color: #f8f8f2;
+    padding: 10px;
+    border-radius: 5px;
+  }
+    .btn-container {
+    margin-top: 60px;
+  }
+
+  .btn {
+    display: inline-block;
+    background: white;
+    color: #4CAF50;
+    border: none;
+    padding: 15px 35px;
+    margin: 15px;
+    font-size: 20px;
+    border-radius: 8px;
+    
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+  }
+
+  .btn:hover {
+    background: #333;
+    color: white;
+    transition: 0.3s;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Data Structures PROGRAMS</h1>
+<div id="trees" class="program">
+    <h2>Trees Questions</h2>
+<div class="program">
+<p class="question">1.CONSTRUCT BINARY TREE FROM PREORDER AND INORDER TRAVERSAL
+</p>
+<pre>
+<xmp>
+    #include<stdio.h>
+#include<stdlib.h>
+struct node{
+    char data;
+    struct node *l,*r;
+};
+int k=0;
+struct node *create(char pre[],char in[],int s,int e){
+    int i;
+    struct node *t;
+    if(s>e){
+        return NULL;
+    }
+    t=(struct node*)malloc(sizeof(struct node));
+    t->data=pre[k++];
+    t->l=NULL;
+    t->r=NULL;
+    if(s==e){
+        return t;
+    }
+    for(i=s;i<=e;i++){
+        if(in[i]==t->data){
+            break;
+        }
+    }
+    t->l=create(pre,in,s,i-1);
+    t->r=create(pre,in,i+1,e);
+    return t;
+}
+void inorder(struct node *t){
+    if(t!=NULL){
+        inorder(t->l);
+        printf("%c ",t->data);
+        inorder(t->r);
+    }
+}
+void preorder(struct node *t){
+    if(t!=NULL){
+        printf("%c ",t->data);
+        preorder(t->l);
+        preorder(t->r);
+    }
+}
+int main(){
+    char pre[50],in[50];
+    struct node *root;
+    int n;
+    printf("enter number of nodes: ");
+    scanf("%d",&n);
+    printf("enter preorder: ");
+    scanf("%s",pre);
+    printf("enter inorder: ");
+    scanf("%s",in);
+    root=create(pre,in,0,n-1);
+    printf("preorder: ");
+    preorder(root);
+    printf("\ninorder: ");
+    inorder(root);
+    return 0;
+}
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+enter number of nodes: 7
+enter preorder: ABDECFG
+enter inorder: DBEAFCG
+preorder: A B D E C F G
+inorder: D B E A F C G
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">2.BINARY TREE LEVEL ORDER TRAVERSAL
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct bst{
+    int data;
+    struct bst *left,*right;
+};
+
+struct bst *start=NULL;
+struct bst *temp,*queue[100];
+int front=-1,rear=-1;
+
+struct bst* create(){
+    int x;
+    struct bst *temp;
+    printf("enter data (-1 for no node): ");
+    scanf("%d",&x);
+    if(x==-1){
+        return NULL;
+    }
+    temp=(struct bst*)malloc(sizeof(struct bst));
+    temp->data=x;
+    printf("enter left child of %d\n",x);
+    temp->left=create();
+    printf("enter right child of %d\n",x);
+    temp->right=create();
+    return temp;
+}
+
+void enqueue(struct bst *x){
+    if(front==-1){
+        front=0;
+    }
+    rear++;
+    queue[rear]=x;
+}
+
+struct bst* dequeue(){
+    struct bst *x;
+    x=queue[front];
+    if(front==rear){
+        front=rear=-1;
+    }
+    else{
+        front++;
+    }
+    return x;
+}
+
+void levelorder(struct bst *t){
+    if(t==NULL){
+        printf("tree is empty");
+        return;
+    }
+    enqueue(t);
+    printf("\nlevel order traversal: ");
+    while(front!=-1){
+        temp=dequeue();
+        printf("%d ",temp->data);
+        if(temp->left!=NULL){
+            enqueue(temp->left);
+        }
+        if(temp->right!=NULL){
+            enqueue(temp->right);
+        }
+    }
+}
+
+int main(){
+    printf("create binary tree\n");
+    start=create();
+    levelorder(start);
+    return 0;
+}
+</xmp>
+</pre>
+
+<h3>Output:</h3>
+    <pre>
+1 2 3
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">3.PRINT LEFT VIEW OF BINARY TREE
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+
+struct bst{
+    int data;
+    struct bst *left,*right;
+};
+struct bst *start=NULL;
+struct bst *q[50];
+
+int input(){
+    int x;
+    printf("\n-----menu-----\n");
+    printf("1.insert\n2.left view\n3.exit\n");
+    printf("enter option: ");
+    scanf("%d",&x);
+    return x;
+}
+
+struct bst *insert(int x,struct bst *t){
+    if(t==NULL){
+        t=(struct bst*)malloc(sizeof(struct bst));
+        t->data=x;
+        t->left=NULL;
+        t->right=NULL;
+        return t;
+    }
+    if(x<t->data){
+        t->left=insert(x,t->left);
+    }
+    else if(x>t->data){
+        t->right=insert(x,t->right);
+    }
+    return t;
+}
+
+void leftview(struct bst *t){
+    int f=0,r=0,x,i;
+    struct bst *temp;
+    if(t==NULL){
+        printf("empty tree");
+        return;
+    }
+    q[r++]=t;
+    while(f<r){
+        x=r-f;
+        for(i=0;i<x;i++){
+            temp=q[f++];
+            if(i==0){
+                printf("%d ",temp->data);
+            }
+            if(temp->left!=NULL){
+                q[r++]=temp->left;
+            }
+            if(temp->right!=NULL){
+                q[r++]=temp->right;
+            }
+        }
+    }
+}
+
+int main(){
+    int key,x;
+    do{
+        key=input();
+        if(key==1){
+            printf("enter data: ");
+            scanf("%d",&x);
+            start=insert(x,start);
+        }
+        else if(key==2){
+            leftview(start);
+        }
+    }while(key!=3);
+    return 0;
+}
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert
+2.left view
+3.exit
+enter option: 1
+enter data: 50
+
+-----menu-----
+1.insert
+2.left view
+3.exit
+enter option: 1
+enter data: 30
+
+-----menu-----
+1.insert
+2.left view
+3.exit
+enter option: 1
+enter data: 70
+
+-----menu-----
+1.insert
+2.left view
+3.exit
+enter option: 1
+enter data: 20
+
+-----menu-----
+1.insert
+2.left view
+3.exit
+enter option: 1
+enter data: 40
+
+-----menu-----
+1.insert
+2.left view
+3.exit
+enter option: 1
+enter data: 60
+
+-----menu-----
+1.insert
+2.left view
+3.exit
+enter option: 1
+enter data: 80
+
+-----menu-----
+1.insert
+2.left view
+3.exit
+enter option: 2
+50 30 20
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">4.DISPLAY THE RIGHT VIEW OF BINARY TREE
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct bst{
+    int data;
+    struct bst *left,*right;
+};
+struct bst *start=NULL;
+struct bst *q[50];
+
+int input(){
+    int x;
+    printf("\n-----menu-----\n");
+    printf("1.insert\n2.right view\n3.exit\n");
+    printf("enter option: ");
+    scanf("%d",&x);
+    return x;
+}
+struct bst *insert(int x,struct bst *t){
+    if(t==NULL){
+        t=(struct bst*)malloc(sizeof(struct bst));
+        t->data=x;
+        t->left=NULL;
+        t->right=NULL;
+        return t;
+    }
+    if(x<t->data){
+        t->left=insert(x,t->left);
+    }
+    else if(x>t->data){
+        t->right=insert(x,t->right);
+    }
+    return t;
+}
+void rightview(struct bst *t){
+    int f=0,r=0,x,i;
+    struct bst *temp;
+    if(t==NULL){
+        printf("empty tree");
+        return;
+    }
+    q[r++]=t;
+    while(f<r){
+        x=r-f;
+        for(i=0;i<x;i++){
+            temp=q[f++];
+            if(i==x-1){
+                printf("%d ",temp->data);
+            }
+            if(temp->left!=NULL){
+                q[r++]=temp->left;
+            }
+            if(temp->right!=NULL){
+                q[r++]=temp->right;
+            }
+        }
+    }
+}
+int main(){
+    int key,x;
+    do{
+        key=input();
+        if(key==1){
+            printf("enter data: ");
+            scanf("%d",&x);
+            start=insert(x,start);
+        }
+        else if(key==2){
+            rightview(start);
+        }
+    }while(key!=3);
+    return 0;
+}
+</xmp>
+</pre>
+ <h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert
+2.right view
+3.exit
+enter option: 1
+enter data: 50
+
+-----menu-----
+1.insert
+2.right view
+3.exit
+enter option: 1
+enter data: 30
+
+-----menu-----
+1.insert
+2.right view
+3.exit
+enter option: 1
+enter data: 70
+
+-----menu-----
+1.insert
+2.right view
+3.exit
+enter option: 1
+enter data: 20
+
+-----menu-----
+1.insert
+2.right view
+3.exit
+enter option: 1
+enter data: 40
+
+-----menu-----
+1.insert
+2.right view
+3.exit
+enter option: 1
+enter data: 60
+
+-----menu-----
+1.insert
+2.right view
+3.exit
+enter option: 1
+enter data: 80
+
+-----menu-----
+1.insert
+2.right view
+3.exit
+enter option: 2
+50 70 80
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">5.CONSTRUCT BINARY TREE FROM POSTORDER AND INORDER TRAVERSAL
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct bst{
+    char data;
+    struct bst *left,*right;
+};
+struct bst *start=NULL;
+int k;
+
+struct bst *create(char post[],char in[],int s,int e){
+    int i;
+    struct bst *temp;
+    if(s>e){
+        return NULL;
+    }
+    temp=(struct bst*)malloc(sizeof(struct bst));
+    temp->data=post[k--];
+    temp->left=NULL;
+    temp->right=NULL;
+    if(s==e){
+        return temp;
+    }
+    for(i=s;i<=e;i++){
+        if(in[i]==temp->data){
+            break;
+        }
+    }
+    temp->right=create(post,in,i+1,e);
+    temp->left=create(post,in,s,i-1);
+    return temp;
+}
+void inorder(struct bst *t){
+    if(t!=NULL){
+        inorder(t->left);
+        printf("%c ",t->data);
+        inorder(t->right);
+    }
+}
+void postorder(struct bst *t){
+    if(t!=NULL){
+        postorder(t->left);
+        postorder(t->right);
+        printf("%c ",t->data);
+    }
+}
+int main(){
+    char post[50],in[50];
+    int n;
+    printf("enter number of nodes: ");
+    scanf("%d",&n);
+    printf("enter postorder: ");
+    scanf("%s",post);
+    printf("enter inorder: ");
+    scanf("%s",in);
+    k=n-1;
+    start=create(post,in,0,n-1);
+    printf("inorder: ");
+    inorder(start);
+    printf("\npostorder: ");
+    postorder(start);
+    return 0;
+}
+</xmp>
+</pre>
+ <h3>Output:</h3>
+    <pre>
+enter number of nodes: 7
+enter postorder: DEBFGCA
+enter inorder: DBEAFCG
+inorder: D B E A F C G
+postorder: D E B F G C A
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">6.FIND THE MAXIMUM DEPTH OF BINARY TREE
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct bst{
+    int data;
+    struct bst *left,*right;
+};
+struct bst *start=NULL;
+
+int input(){
+    int x;
+    printf("\n-----menu-----\n");
+    printf("1.insert\n2.maximum depth\n3.exit\n");
+    printf("enter option: ");
+    scanf("%d",&x);
+    return x;
+}
+struct bst *insert(int x,struct bst *t){
+    if(t==NULL){
+        t=(struct bst*)malloc(sizeof(struct bst));
+        t->data=x;
+        t->left=NULL;
+        t->right=NULL;
+        return t;
+    }
+    if(x<t->data){
+        t->left=insert(x,t->left);
+    }
+    else if(x>t->data){
+        t->right=insert(x,t->right);
+    }
+    return t;
+}
+int depth(struct bst *t){
+    int a,b;
+    if(t==NULL){
+        return 0;
+    }
+    a=depth(t->left);
+    b=depth(t->right);
+    if(a>b){
+        return a+1;
+    }
+    else{
+        return b+1;
+    }
+}
+int main(){
+    int key,x;
+    do{
+        key=input();
+        if(key==1){
+            printf("enter data: ");
+            scanf("%d",&x);
+            start=insert(x,start);
+        }
+        else if(key==2){
+            printf("maximum depth: %d",depth(start));
+        }
+    }while(key!=3);
+    return 0;
+}
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert
+2.maximum depth
+3.exit
+enter option: 1
+enter data: 50
+
+-----menu-----
+1.insert
+2.maximum depth
+3.exit
+enter option: 1
+enter data: 30
+
+-----menu-----
+1.insert
+2.maximum depth
+3.exit
+enter option: 1
+enter data: 70
+
+-----menu-----
+1.insert
+2.maximum depth
+3.exit
+enter option: 1
+enter data: 20
+
+-----menu-----
+1.insert
+2.maximum depth
+3.exit
+enter option: 1
+enter data: 40
+
+-----menu-----
+1.insert
+2.maximum depth
+3.exit
+enter option: 1
+enter data: 60
+
+-----menu-----
+1.insert
+2.maximum depth
+3.exit
+enter option: 1
+enter data: 80
+
+-----menu-----
+1.insert
+2.maximum depth
+3.exit
+enter option: 2
+maximum depth: 3
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">7.CREATE BINARY SEARCH TREE USING ARRAYS (INSERT, DELETE, SEARCH, PREORDER, INORDER, POSTORDER, MINIMUM ELEMENT)
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+int a[50];
+
+int input(){
+    int x;
+    printf("\n-----menu-----\n");
+    printf("1.insert\n2.delete\n3.search\n4.preorder\n5.inorder\n6.postorder\n7.minimum\n8.exit\n");
+    printf("enter option: ");
+    scanf("%d",&x);
+    return x;
+}
+void insert(int x){
+    int i=0;
+    while(i<50 && a[i]!=-1){
+        if(x<a[i]){
+            i=2*i+1;
+        }
+        else if(x>a[i]){
+            i=2*i+2;
+        }
+        else{
+            printf("duplicate");
+            return;
+        }
+    }
+    if(i<50){
+        a[i]=x;
+        printf("inserted");
+    }
+    else{
+        printf("tree is full");
+    }
+}
+void search(int x){
+    int i=0;
+    while(i<50 && a[i]!=-1){
+        if(a[i]==x){
+            printf("found");
+            return;
+        }
+        else if(x<a[i]){
+            i=2*i+1;
+        }
+        else{
+            i=2*i+2;
+        }
+    }
+    printf("not found");
+}
+void preorder(int i){
+    if(i<50 && a[i]!=-1){
+        printf("%d ",a[i]);
+        preorder(2*i+1);
+        preorder(2*i+2);
+    }
+}
+void inorder(int i){
+    if(i<50 && a[i]!=-1){
+        inorder(2*i+1);
+        printf("%d ",a[i]);
+        inorder(2*i+2);
+    }
+}
+void postorder(int i){
+    if(i<50 && a[i]!=-1){
+        postorder(2*i+1);
+        postorder(2*i+2);
+        printf("%d ",a[i]);
+    }
+}
+void minimum(){
+    int i=0;
+    if(a[0]==-1){
+        printf("tree is empty");
+        return;
+    }
+    while(2*i+1<50 && a[2*i+1]!=-1){
+        i=2*i+1;
+    }
+    printf("minimum element: %d",a[i]);
+}
+void delete(int x){
+    int i=0,j;
+    while(i<50 && a[i]!=-1){
+        if(a[i]==x){
+            break;
+        }
+        else if(x<a[i]){
+            i=2*i+1;
+        }
+        else{
+            i=2*i+2;
+        }
+    }
+    if(i>=50|| a[i]==-1){
+        printf("not found");
+        return;
+    }
+    if((2*i+1>=50 || a[2*i+1]==-1) &&
+       (2*i+2>=50 || a[2*i+2]==-1)){
+        a[i]=-1;
+    }
+    else if(2*i+1<50 && a[2*i+1]!=-1){
+        j=2*i+1;
+        while(2*j+2<50 && a[2*j+2]!=-1){
+            j=2*j+2;
+        }
+        a[i]=a[j];
+        a[j]=-1;
+    }
+    else{
+        j=2*i+2;
+        while(2*j+1<50 && a[2*j+1]!=-1){
+            j=2*j+1;
+        }
+        a[i]=a[j];
+        a[j]=-1;
+    }
+    printf("deleted");
+}
+int main(){
+    int key,x,i;
+    for(i=0;i<50;i++){
+        a[i]=-1;
+    }
+    do{
+        key=input();
+        if(key==1){
+            printf("enter data: ");
+            scanf("%d",&x);
+            insert(x);
+        }
+        else if(key==2){
+            printf("enter element to delete: ");
+            scanf("%d",&x);
+            delete(x);
+        }
+        else if(key==3){
+            printf("enter element to search: ");
+            scanf("%d",&x);
+            search(x);
+        }
+        else if(key==4){
+            preorder(0);
+        }
+        else if(key==5){
+            inorder(0);
+        }
+        else if(key==6){
+            postorder(0);
+        }
+        else if(key==7){
+            minimum();
+        }
+    }while(key!=8);
+    return 0;
+}
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert
+2.delete
+3.search
+4.preorder
+5.inorder
+6.postorder
+7.minimum
+8.exit
+enter option: 1
+enter data: 50
+inserted
+enter option: 1
+enter data: 30
+inserted
+enter option: 1
+enter data: 70
+inserted
+enter option: 1
+enter data: 20
+inserted
+enter option: 1
+enter data: 40
+inserted
+enter option: 1
+enter data: 60
+inserted
+enter option: 1
+enter data: 80
+inserted
+enter option: 4
+50 30 20 40 70 60 80
+enter option: 5
+20 30 40 50 60 70 80
+enter option: 6
+20 40 30 60 80 70 50
+enter option: 3
+enter element to search: 40
+found
+enter option: 7
+minimum element: 20
+enter option: 2
+enter element to delete: 20
+deleted
+enter option: 5
+30 40 50 60 70 80
+enter option: 8
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">8.CREATE BINARY SEARCH TREE DYNAMICALLY (INSERT, DELETE, SEARCH, PREORDER, INORDER, POSTORDER, MINIMUM ELEMENT)
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct bst{
+    int data;
+    struct bst *left,*right;
+};
+struct bst *start=NULL;
+struct bst *temp,*search,*s;
+
+int input(){
+    int x;
+    printf("\n-----menu-----\n");
+    printf("1.insert\n2.delete\n3.search\n4.preorder\n5.inorder\n6.postorder\n7.minimum\n8.exit\n");
+    printf("enter option: ");
+    scanf("%d",&x);
+    return x;
+}
+struct bst *insert(int x,struct bst *t){
+    if(t==NULL){
+        temp=(struct bst*)malloc(sizeof(struct bst));
+        temp->data=x;
+        temp->left=NULL;
+        temp->right=NULL;
+        return temp;
+    }
+    if(x<t->data){
+        t->left=insert(x,t->left);
+    }
+    else if(x>t->data){
+        t->right=insert(x,t->right);
+    }
+    else{
+        printf("duplicate");
+    }
+    return t;
+}
+void preorder(struct bst *t){
+    if(t!=NULL){
+        printf("%d ",t->data);
+        preorder(t->left);
+        preorder(t->right);
+    }
+}
+void inorder(struct bst *t){
+    if(t!=NULL){
+        inorder(t->left);
+        printf("%d ",t->data);
+        inorder(t->right);
+    }
+}
+void postorder(struct bst *t){
+    if(t!=NULL){
+        postorder(t->left);
+        postorder(t->right);
+        printf("%d ",t->data);
+    }
+}
+void srch(int x,struct bst *t){
+    if(t==NULL){
+        printf("not found");
+    }
+    else if(t->data==x){
+        printf("found");
+    }
+    else if(x<t->data){
+        srch(x,t->left);
+    }
+    else{
+        srch(x,t->right);
+    }
+}
+void minimum(struct bst *t){
+    if(t==NULL){
+        printf("tree is empty");
+        return;
+    }
+    while(t->left!=NULL){
+        t=t->left;
+    }
+    printf("minimum element: %d",t->data);
+}
+struct bst *delete(int x,struct bst *t){
+    struct bst *temp,*p;
+    if(t==NULL){
+        printf("not found");
+        return NULL;
+    }
+    if(x<t->data){
+        t->left=delete(x,t->left);
+    }
+    else if(x>t->data){
+        t->right=delete(x,t->right);
+    }
+    else{
+        if(t->left==NULL && t->right==NULL){
+            free(t);
+            return NULL;
+        }
+        else if(t->left==NULL){
+            temp=t->right;
+            free(t);
+            return temp;
+        }
+        else if(t->right==NULL){
+            temp=t->left;
+            free(t);
+            return temp;
+        }
+        else{
+            p=t->left;
+            while(p->right!=NULL){
+                p=p->right;
+            }
+            t->data=p->data;
+            t->left=delete(p->data,t->left);
+        }
+    }
+    return t;
+}
+int main(){
+    int key,x;
+    do{
+        key=input();
+        if(key==1){
+            printf("enter data: ");
+            scanf("%d",&x);
+            start=insert(x,start);
+        }
+        else if(key==2){
+            printf("enter element to delete: ");
+            scanf("%d",&x);
+            start=delete(x,start);
+        }
+        else if(key==3){
+            printf("enter element to search: ");
+            scanf("%d",&x);
+            srch(x,start);
+        }
+        else if(key==4){
+            preorder(start);
+        }
+        else if(key==5){
+            inorder(start);
+        }
+        else if(key==6){
+            postorder(start);
+        }
+        else if(key==7){
+            minimum(start);
+        }
+    }while(key!=8);
+    return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert
+2.delete
+3.search
+4.preorder
+5.inorder
+6.postorder
+7.minimum
+8.exit
+enter option: 1
+enter data: 50
+enter option: 1
+enter data: 30
+enter option: 1
+enter data: 70
+enter option: 1
+enter data: 20
+enter option: 1
+enter data: 40
+enter option: 1
+enter data: 60
+enter option: 1
+enter data: 80
+enter option: 4
+50 30 20 40 70 60 80
+enter option: 5
+20 30 40 50 60 70 80
+enter option: 6
+20 40 30 60 80 70 50
+enter option: 3
+enter element to search: 40
+found
+enter option: 7
+minimum element: 20
+enter option: 2
+enter element to delete: 20
+enter option: 5
+30 40 50 60 70 80
+enter option: 8
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">9.FIND INORDER PREDECESSOR AND INORDER SUCCESSOR OF BINARY SEARCH TREE (DYNAMICALLY REPRESENTED)
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct bst{
+    int data;
+    struct bst *left,*right;
+};
+
+struct bst *start=NULL;
+struct bst *temp;
+
+int input(){
+    int x;
+    printf("\n-----MENU-----\n");
+    printf("1.insert\n2.find predecessor and successor\n3.exit\n");
+    printf("enter option: ");
+    scanf("%d",&x);
+    return x;
+}
+
+struct bst *insert(int x,struct bst *t){
+    if(t==NULL){
+        temp=(struct bst*)malloc(sizeof(struct bst));
+        temp->data=x;
+        temp->left=NULL;
+        temp->right=NULL;
+        return temp;
+    }
+    if(x<t->data){
+        t->left=insert(x,t->left);
+    }
+    else if(x>t->data){
+        t->right=insert(x,t->right);
+    }
+    else{
+        printf("duplicate");
+    }
+    return t;
+}
+
+void find(int x,struct bst *t){
+    struct bst *p,*s;
+    p=NULL;
+    s=NULL;
+
+    while(t!=NULL){
+        if(x<t->data){
+            s=t;
+            t=t->left;
+        }
+        else if(x>t->data){
+            p=t;
+            t=t->right;
+        }
+        else{
+            break;
+        }
+    }
+
+    if(t==NULL){
+        printf("element not found");
+        return;
+    }
+
+    if(t->left!=NULL){
+        p=t->left;
+        while(p->right!=NULL){
+            p=p->right;
+        }
+    }
+
+    if(t->right!=NULL){
+        s=t->right;
+        while(s->left!=NULL){
+            s=s->left;
+        }
+    }
+    if(p==NULL){
+        printf("inorder predecessor does not exist\n");
+    }
+    else{
+        printf("inorder predecessor: %d\n",p->data);
+    }
+    if(s==NULL){
+        printf("inorder successor does not exist\n");
+    }
+    else{
+        printf("inorder successor: %d\n",s->data);
+    }
+}
+int main(){
+    int key,x;
+    do{
+        key=input();
+        if(key==1){
+            printf("enter data: ");
+            scanf("%d",&x);
+            start=insert(x,start);
+        }
+        else if(key==2){
+            printf("enter element: ");
+            scanf("%d",&x);
+            find(x,start);
+        }
+    }while(key!=3);
+    return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----MENU-----
+1.insert
+2.find predecessor and successor
+3.exit
+enter option: 1
+enter data: 50
+
+-----MENU-----
+1.insert
+2.find predecessor and successor
+3.exit
+enter option: 1
+enter data: 30
+
+-----MENU-----
+1.insert
+2.find predecessor and successor
+3.exit
+enter option: 1
+enter data: 70
+
+-----MENU-----
+1.insert
+2.find predecessor and successor
+3.exit
+enter option: 1
+enter data: 20
+
+-----MENU-----
+1.insert
+2.find predecessor and successor
+3.exit
+enter option: 1
+enter data: 40
+
+-----MENU-----
+1.insert
+2.find predecessor and successor
+3.exit
+enter option: 1
+enter data: 60
+
+-----MENU-----
+1.insert
+2.find predecessor and successor
+3.exit
+enter option: 1
+enter data: 80
+
+-----MENU-----
+1.insert
+2.find predecessor and successor
+3.exit
+enter option: 2
+enter element: 50
+inorder predecessor: 40
+inorder successor: 60
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">10.CHECK WHETHER BST CONTAINS DEAD END
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct bst{
+    int data;
+    struct bst *left,*right;
+};
+struct bst *start=NULL;
+struct bst *temp;
+
+int input(){
+    int x;
+    printf("\n-----MENU-----\n");
+    printf("1.insert\n2.check dead end\n3.exit\n");
+    printf("enter option: ");
+    scanf("%d",&x);
+    return x;
+}
+
+struct bst *insert(int x,struct bst *t){
+    if(t==NULL){
+        temp=(struct bst*)malloc(sizeof(struct bst));
+        temp->data=x;
+        temp->left=NULL;
+        temp->right=NULL;
+        return temp;
+    }
+    if(x<t->data){
+        t->left=insert(x,t->left);
+    }
+    else if(x>t->data){
+        t->right=insert(x,t->right);
+    }
+    else{
+        printf("duplicate");
+    }
+    return t;
+}
+
+int deadend(struct bst *t,int min,int max){
+    if(t==NULL){
+        return 0;
+    }
+    if(min==max){
+        return 1;
+    }
+    if(deadend(t->left,min,t->data-1)){
+        return 1;
+    }
+    if(deadend(t->right,t->data+1,max)){
+        return 1;
+    }
+    return 0;
+}
+int main(){
+    int key,x;
+    do{
+        key=input();
+        if(key==1){
+            printf("enter data: ");
+            scanf("%d",&x);
+            start=insert(x,start);
+        }
+        else if(key==2){
+            if(deadend(start,1,1000)){
+                printf("BST contains dead end");
+            }
+            else{
+                printf("BST does not contain dead end");
+            }
+        }
+    }while(key!=3);
+    return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----MENU-----
+1.insert
+2.check dead end
+3.exit
+enter option: 1
+enter data: 50
+
+-----MENU-----
+1.insert
+2.check dead end
+3.exit
+enter option: 1
+enter data: 30
+
+-----MENU-----
+1.insert
+2.check dead end
+3.exit
+enter option: 1
+enter data: 70
+
+-----MENU-----
+1.insert
+2.check dead end
+3.exit
+enter option: 1
+enter data: 20
+
+-----MENU-----
+1.insert
+2.check dead end
+3.exit
+enter option: 1
+enter data: 40
+
+-----MENU-----
+1.insert
+2.check dead end
+3.exit
+enter option: 2
+BST does not contain dead end
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">11.CONVERT BINARY TREE TO BINARY SEARCH TREE USING ARRAY
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct node{
+    int data;
+    struct node *left,*right;
+};
+
+struct node *start=NULL;
+int a[50],n=0,k=0;
+
+struct node *create(){
+    int x;
+    struct node *temp;
+    printf("enter data (-1 for no node): ");
+    scanf("%d",&x);
+    if(x==-1){
+        return NULL;
+    }
+    temp=(struct node*)malloc(sizeof(struct node));
+    temp->data=x;
+    temp->left=create();
+    temp->right=create();
+    return temp;
+}
+
+void store(struct node *t){
+    if(t!=NULL){
+        store(t->left);
+        a[n++]=t->data;
+        store(t->right);
+    }
+}
+
+void sort(){
+    int i,j,t;
+    for(i=0;i<n;i++){
+        for(j=i+1;j<n;j++){
+            if(a[i]>a[j]){
+                t=a[i];
+                a[i]=a[j];
+                a[j]=t;
+            }
+        }
+    }
+}
+
+void inorder(struct node *t){
+    if(t!=NULL){
+        inorder(t->left);
+        t->data=a[k++];
+        inorder(t->right);
+    }
+}
+
+void display(struct node *t){
+    if(t!=NULL){
+        display(t->left);
+        printf("%d ",t->data);
+        display(t->right);
+    }
+}
+
+int main(){
+    printf("create binary tree\n");
+    start=create();
+    store(start);
+    sort();
+    k=0;
+    inorder(start);
+    printf("\nBST inorder traversal: ");
+    display(start);
+    return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+create binary tree
+enter data (-1 for no node): 10
+enter data (-1 for no node): 30
+enter data (-1 for no node): -1
+enter data (-1 for no node): -1
+enter data (-1 for no node): 20
+enter data (-1 for no node): -1
+enter data (-1 for no node): -1
+
+BST inorder traversal: 10 20 30
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">12.FIND KTH LARGEST ELEMENT IN BST USING ARRAY
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+int a[100],n=0,k=0,count=0,ans=-1;
+
+int input(){
+int x;
+printf("\n-----MENU-----\n");
+printf("1.insert\n2.find kth largest\n3.display\n4.exit\n");
+printf("enter option: ");
+scanf("%d",&x);
+return x;
+}
+
+void insert(int x){
+int i=0;
+while(i<100 && a[i]!=-1){
+if(x<a[i]){
+i=2*i+1;
+}
+else if(x>a[i]){
+i=2*i+2;
+}
+else{
+printf("duplicate");
+return;
+}
+}
+if(i<100){
+a[i]=x;
+n++;
+}
+else{
+printf("tree is full");
+}
+}
+
+void find(int i){
+if(i>=100 || a[i]==-1 || count>=k){
+return;
+}
+find(2*i+2);
+if(count<k){
+count++;
+if(count==k){
+ans=a[i];
+return;
+}
+}
+find(2*i+1);
+}
+
+void display(int i){
+if(i<100 && a[i]!=-1){
+display(2*i+1);
+printf("%d ",a[i]);
+display(2*i+2);
+}
+}
+
+int main(){
+int key,x,i;
+for(i=0;i<100;i++){
+a[i]=-1;
+}
+do{
+key=input();
+if(key==1){
+printf("enter data: ");
+scanf("%d",&x);
+insert(x);
+}
+else if(key==2){
+printf("enter k: ");
+scanf("%d",&k);
+count=0;
+ans=-1;
+if(k<=0 || k>n){
+printf("invalid k");
+}
+else{
+find(0);
+printf("kth largest element: %d",ans);
+}
+}
+else if(key==3){
+printf("inorder: ");
+display(0);
+}
+}while(key!=4);
+return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----MENU-----
+1.insert
+2.find kth largest
+3.display
+4.exit
+enter option: 1
+enter data: 50
+enter option: 1
+enter data: 30
+enter option: 1
+enter data: 70
+enter option: 1
+enter data: 20
+enter option: 1
+enter data: 40
+enter option: 1
+enter data: 60
+enter option: 1
+enter data: 80
+enter option: 3
+inorder: 20 30 40 50 60 70 80
+enter option: 2
+enter k: 2
+kth largest element: 70
+enter option: 4
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">13.FIND KTH SMALLEST ELEMENT IN A BINARY SEARCH TREE THROUGH ARRAY
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct bst{
+    int data;
+    struct bst *left,*right;
+};
+
+struct bst *start=NULL;
+struct bst *temp;
+
+int count=0,k,ans;
+
+int input(){
+    int x;
+    printf("\n-----menu-----\n");
+    printf("1.insert\n2.inorder\n3.find kth smallest\n4.exit\n");
+    printf("enter option: ");
+    scanf("%d",&x);
+    return x;
+}
+
+struct bst *insert(int x,struct bst *t){
+    if(t==NULL){
+        temp=(struct bst*)malloc(sizeof(struct bst));
+        temp->data=x;
+        temp->left=NULL;
+        temp->right=NULL;
+        return temp;
+    }
+    if(x<t->data){
+        t->left=insert(x,t->left);
+    }
+    else if(x>t->data){
+        t->right=insert(x,t->right);
+    }
+    else{
+        printf("duplicate");
+    }
+    return t;
+}
+
+void inorder(struct bst *t){
+    if(t!=NULL){
+        inorder(t->left);
+        printf("%d ",t->data);
+        inorder(t->right);
+    }
+}
+
+void find(struct bst *t){
+    if(t!=NULL && count<k){
+        find(t->left);
+        if(count<k){
+            count++;
+            if(count==k){
+                ans=t->data;
+                return;
+            }
+        }
+        find(t->right);
+    }
+}
+
+int main(){
+    int key,x;
+    do{
+        key=input();
+        if(key==1){
+            printf("enter data: ");
+            scanf("%d",&x);
+            start=insert(x,start);
+        }
+        else if(key==2){
+            inorder(start);
+        }
+        else if(key==3){
+            printf("enter k: ");
+            scanf("%d",&k);
+            count=0;
+            ans=-1;
+            if(k<=0){
+                printf("invalid k");
+            }
+            else{
+                find(start);
+                if(count<k){
+                    printf("invalid k");
+                }
+                else{
+                    printf("kth smallest element: %d",ans);
+                }
+            }
+        }
+    }while(key!=4);
+    return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert
+2.inorder
+3.find kth smallest
+4.exit
+enter option: 1
+enter data: 50
+enter option: 1
+enter data: 30
+enter option: 1
+enter data: 70
+enter option: 1
+enter data: 20
+enter option: 1
+enter data: 40
+enter option: 1
+enter data: 60
+enter option: 1
+enter data: 80
+enter option: 2
+20 30 40 50 60 70 80
+enter option: 3
+enter k: 3
+kth smallest element: 40
+enter option: 4
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">14.CONVERT PREORDER TRAVERSAL TO POSTORDER TRAVERSAL OF BST
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct bst{
+    int data;
+    struct bst *left,*right;
+};
+
+struct bst *start=NULL;
+struct bst *temp;
+
+int input(){
+    int x;
+    printf("\n-----menu-----\n");
+    printf("1.insert preorder element\n2.postorder\n3.exit\n");
+    printf("enter option: ");
+    scanf("%d",&x);
+    return x;
+}
+
+struct bst *insert(int x,struct bst *t){
+    if(t==NULL){
+        temp=(struct bst*)malloc(sizeof(struct bst));
+        temp->data=x;
+        temp->left=NULL;
+        temp->right=NULL;
+        return temp;
+    }
+    if(x<t->data){
+        t->left=insert(x,t->left);
+    }
+    else if(x>t->data){
+        t->right=insert(x,t->right);
+    }
+    else{
+        printf("duplicate");
+    }
+    return t;
+}
+
+void postorder(struct bst *t){
+    if(t!=NULL){
+        postorder(t->left);
+        postorder(t->right);
+        printf("%d ",t->data);
+    }
+}
+
+int main(){
+    int key,x,n,i;
+    do{
+        key=input();
+        if(key==1){
+            printf("enter number of elements: ");
+            scanf("%d",&n);
+            printf("enter preorder elements: ");
+            for(i=0;i<n;i++){
+                scanf("%d",&x);
+                start=insert(x,start);
+            }
+        }
+        else if(key==2){
+            printf("postorder traversal: ");
+            postorder(start);
+        }
+    }while(key!=3);
+    return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert preorder element
+2.postorder
+3.exit
+enter option: 1
+enter number of elements: 7
+enter preorder elements: 50 30 20 40 70 60 80
+
+-----menu-----
+1.insert preorder element
+2.postorder
+3.exit
+enter option: 2
+postorder traversal: 20 40 30 60 80 70 50
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">15.CONSTRUCT BINARY SEARCH TREE FROM GIVEN PREORDER TRAVERSAL THROUGH ARRAYS
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+int a[100],n=0;
+
+int input(){
+int x;
+printf("\n-----menu-----\n");
+printf("1.insert preorder element\n2.preorder\n3.inorder\n4.postorder\n5.exit\n");
+printf("enter option: ");
+scanf("%d",&x);
+return x;
+}
+
+void insert(int x){
+int i=0;
+while(i<100 && a[i]!=-1){
+if(x<a[i]){
+i=2*i+1;
+}
+else if(x>a[i]){
+i=2*i+2;
+}
+else{
+printf("duplicate");
+return;
+}
+}
+if(i<100){
+a[i]=x;
+n++;
+}
+else{
+printf("tree is full");
+}
+}
+
+void preorder(int i){
+if(i<100 && a[i]!=-1){
+printf("%d ",a[i]);
+preorder(2*i+1);
+preorder(2*i+2);
+}
+}
+
+void inorder(int i){
+if(i<100 && a[i]!=-1){
+inorder(2*i+1);
+printf("%d ",a[i]);
+inorder(2*i+2);
+}
+}
+
+void postorder(int i){
+if(i<100 && a[i]!=-1){
+postorder(2*i+1);
+postorder(2*i+2);
+printf("%d ",a[i]);
+}
+}
+
+int main(){
+int key,x,i,n1;
+for(i=0;i<100;i++){
+a[i]=-1;
+}
+do{
+key=input();
+if(key==1){
+printf("enter number of elements: ");
+scanf("%d",&n1);
+printf("enter preorder elements: ");
+for(i=0;i<n1;i++){
+scanf("%d",&x);
+insert(x);
+}
+}
+else if(key==2){
+printf("preorder: ");
+preorder(0);
+}
+else if(key==3){
+printf("inorder: ");
+inorder(0);
+}
+else if(key==4){
+printf("postorder: ");
+postorder(0);
+}
+}while(key!=5);
+return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert preorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 1
+enter number of elements: 7
+enter preorder elements: 50 30 20 40 70 60 80
+
+-----menu-----
+1.insert preorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 2
+preorder: 50 30 20 40 70 60 80
+
+-----menu-----
+1.insert preorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 3
+inorder: 20 30 40 50 60 70 80
+
+-----menu-----
+1.insert preorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 4
+postorder: 20 40 30 60 80 70 50
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">16.CONSTRUCT BINARY SEARCH TREE FROM GIVEN POSTORDER TRAVERSAL THROUGH ARRAYS
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+int a[50],n=0;
+
+int input(){
+int x;
+printf("\n-----menu-----\n");
+printf("1.insert postorder element\n2.preorder\n3.inorder\n4.postorder\n5.exit\n");
+printf("enter option: ");
+scanf("%d",&x);
+return x;
+}
+
+void insert(int x){
+int i=0;
+while(i<100 && a[i]!=-1){
+if(x<a[i]){
+i=2*i+1;
+}
+else if(x>a[i]){
+i=2*i+2;
+}
+else{
+printf("duplicate");
+return;
+}
+}
+if(i<100){
+a[i]=x;
+n++;
+}
+else{
+printf("tree is full");
+}
+}
+
+void preorder(int i){
+if(i<100 && a[i]!=-1){
+printf("%d ",a[i]);
+preorder(2*i+1);
+preorder(2*i+2);
+}
+}
+
+void inorder(int i){
+if(i<100 && a[i]!=-1){
+inorder(2*i+1);
+printf("%d ",a[i]);
+inorder(2*i+2);
+}
+}
+
+void postorder(int i){
+if(i<100 && a[i]!=-1){
+postorder(2*i+1);
+postorder(2*i+2);
+printf("%d ",a[i]);
+}
+}
+
+int main(){
+int key,x,i,n1;
+for(i=0;i<100;i++){
+a[i]=-1;
+}
+do{
+key=input();
+if(key==1){
+printf("enter number of elements: ");
+scanf("%d",&n1);
+printf("enter postorder elements: ");
+for(i=0;i<n1;i++){
+scanf("%d",&x);
+insert(x);
+}
+}
+else if(key==2){
+printf("preorder: ");
+preorder(0);
+}
+else if(key==3){
+printf("inorder: ");
+inorder(0);
+}
+else if(key==4){
+printf("postorder: ");
+postorder(0);
+}
+}while(key!=5);
+return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert postorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 1
+enter number of elements: 7
+enter postorder elements: 20 40 30 60 80 70 50
+
+-----menu-----
+1.insert postorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 2
+preorder: 20 40 30 60 80 70 50
+
+-----menu-----
+1.insert postorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 3
+inorder: 20 40 30 60 80 70 50
+
+-----menu-----
+1.insert postorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 4
+postorder: 20 40 30 60 80 70 50
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">17.CREATE STRICTLY BINARY TREE FROM THE GIVEN INPUT BY THE USER (DYNAMICALLY)
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+int a[50],n=0;
+
+int input(){
+int x;
+printf("\n-----menu-----\n");
+printf("1.insert postorder element\n2.preorder\n3.inorder\n4.postorder\n5.exit\n");
+printf("enter option: ");
+scanf("%d",&x);
+return x;
+}
+
+void insert(int x){
+int i=0;
+while(i<50 && a[i]!=-1){
+if(x<a[i]){
+i=2*i+1;
+}
+else if(x>a[i]){
+i=2*i+2;
+}
+else{
+printf("duplicate");
+return;
+}
+}
+if(i<50){
+a[i]=x;
+n++;
+}
+else{
+printf("tree is full");
+}
+}
+
+void preorder(int i){
+if(i<50 && a[i]!=-1){
+printf("%d ",a[i]);
+preorder(2*i+1);
+preorder(2*i+2);
+}
+}
+
+void inorder(int i){
+if(i<50 && a[i]!=-1){
+inorder(2*i+1);
+printf("%d ",a[i]);
+inorder(2*i+2);
+}
+}
+
+void postorder(int i){
+if(i<50 && a[i]!=-1){
+postorder(2*i+1);
+postorder(2*i+2);
+printf("%d ",a[i]);
+}
+}
+
+int main(){
+int key,x,i,n1;
+for(i=0;i<50;i++){
+a[i]=-1;
+}
+do{
+key=input();
+if(key==1){
+printf("enter number of elements: ");
+scanf("%d",&n1);
+printf("enter postorder elements: ");
+for(i=0;i<n1;i++){
+scanf("%d",&x);
+insert(x);
+}
+}
+else if(key==2){
+printf("preorder: ");
+preorder(0);
+}
+else if(key==3){
+printf("inorder: ");
+inorder(0);
+}
+else if(key==4){
+printf("postorder: ");
+postorder(0);
+}
+}while(key!=5);
+return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert postorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 1
+enter number of elements: 7
+enter postorder elements: 20 40 30 60 80 70 50
+
+-----menu-----
+1.insert postorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 2
+preorder: 20 40 30 60 80 70 50
+
+-----menu-----
+1.insert postorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 3
+inorder: 20 40 30 60 80 70 50
+
+-----menu-----
+1.insert postorder element
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 4
+postorder: 20 40 30 60 80 70 50
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">18.CREATE ALMOST COMPLETE BINARY TREE FROM THE GIVEN INPUT BY THE USER (DYNAMICALLY)
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct node{
+int data;
+struct node *left,*right;
+};
+
+struct node *start=NULL;
+struct node *temp,*q[50];
+
+int input(){
+int x;
+printf("\n-----menu-----\n");
+printf("1.create tree\n2.preorder\n3.inorder\n4.postorder\n5.exit\n");
+printf("enter option: ");
+scanf("%d",&x);
+return x;
+}
+
+void create(int n){
+int i,x,f,r;
+struct node *temp;
+
+f=0;
+r=0;
+
+printf("enter root data: ");
+scanf("%d",&x);
+
+start=(struct node*)malloc(sizeof(struct node));
+start->data=x;
+start->left=NULL;
+start->right=NULL;
+
+q[r++]=start;
+
+for(i=1;i<n;i++){
+printf("enter data: ");
+scanf("%d",&x);
+
+temp=(struct node*)malloc(sizeof(struct node));
+temp->data=x;
+temp->left=NULL;
+temp->right=NULL;
+
+if(q[f]->left==NULL){
+q[f]->left=temp;
+}
+else{
+q[f]->right=temp;
+f++;
+}
+q[r++]=temp;
+}
+}
+
+void preorder(struct node *t){
+if(t!=NULL){
+printf("%d ",t->data);
+preorder(t->left);
+preorder(t->right);
+}
+}
+
+void inorder(struct node *t){
+if(t!=NULL){
+inorder(t->left);
+printf("%d ",t->data);
+inorder(t->right);
+}
+}
+
+void postorder(struct node *t){
+if(t!=NULL){
+postorder(t->left);
+postorder(t->right);
+printf("%d ",t->data);
+}
+}
+
+int main(){
+int key,n;
+do{
+key=input();
+if(key==1){
+printf("enter number of nodes: ");
+scanf("%d",&n);
+if(n>0 && n<=50){
+create(n);
+}
+else{
+printf("invalid number of nodes");
+}
+}
+else if(key==2){
+preorder(start);
+}
+else if(key==3){
+inorder(start);
+}
+else if(key==4){
+postorder(start);
+}
+}while(key!=5);
+return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.create tree
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 1
+enter number of nodes: 6
+enter root data: 1
+enter data: 2
+enter data: 3
+enter data: 4
+enter data: 5
+enter data: 6
+
+-----menu-----
+1.create tree
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 2
+1 2 4 5 3 6
+
+-----menu-----
+1.create tree
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 3
+4 2 5 1 6 3
+
+-----menu-----
+1.create tree
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 4
+4 5 2 6 3 1
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">19.CREATE COMPLETE BINARY TREE DYNAMICALLY
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+int data;
+struct node *left,*right;
+};
+
+struct node *start=NULL;
+struct node *q[100];
+
+int input(){
+int x;
+printf("\n-----menu-----\n");
+printf("1.create tree\n2.preorder\n3.inorder\n4.postorder\n5.exit\n");
+printf("enter option: ");
+scanf("%d",&x);
+return x;
+}
+
+void create(int n){
+int i,x,f,r;
+struct node *temp;
+
+f=0;
+r=0;
+
+for(i=0;i<n;i++){
+printf("enter data: ");
+scanf("%d",&x);
+
+temp=(struct node*)malloc(sizeof(struct node));
+temp->data=x;
+temp->left=NULL;
+temp->right=NULL;
+
+if(start==NULL){
+start=temp;
+}
+else{
+if(q[f]->left==NULL){
+q[f]->left=temp;
+}
+else{
+q[f]->right=temp;
+f++;
+}
+}
+q[r++]=temp;
+}
+}
+
+void preorder(struct node *t){
+if(t!=NULL){
+printf("%d ",t->data);
+preorder(t->left);
+preorder(t->right);
+}
+}
+
+void inorder(struct node *t){
+if(t!=NULL){
+inorder(t->left);
+printf("%d ",t->data);
+inorder(t->right);
+}
+}
+
+void postorder(struct node *t){
+if(t!=NULL){
+postorder(t->left);
+postorder(t->right);
+printf("%d ",t->data);
+}
+}
+
+int main(){
+int key,n;
+do{
+key=input();
+if(key==1){
+printf("enter number of nodes: ");
+scanf("%d",&n);
+if(n>0 && n<=100){
+start=NULL;
+create(n);
+}
+else{
+printf("invalid number of nodes");
+}
+}
+else if(key==2){
+preorder(start);
+}
+else if(key==3){
+inorder(start);
+}
+else if(key==4){
+postorder(start);
+}
+}while(key!=5);
+return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.create tree
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 1
+enter number of nodes: 6
+enter data: 1
+enter data: 2
+enter data: 3
+enter data: 4
+enter data: 5
+enter data: 6
+
+-----menu-----
+1.create tree
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 2
+1 2 4 5 3 6
+
+-----menu-----
+1.create tree
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 3
+4 2 5 1 6 3
+
+-----menu-----
+1.create tree
+2.preorder
+3.inorder
+4.postorder
+5.exit
+enter option: 4
+4 5 2 6 3 1
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">20.COUNT NUMBER OF NODES IN BST DYNAMICALLY
+</p>
+<pre>
+<xmp>
+#include<stdio.h>
+#include<stdlib.h>
+struct bst{
+int data;
+struct bst *left,*right;
+};
+
+struct bst *start=NULL;
+struct bst *temp;
+
+int input(){
+int x;
+printf("\n-----menu-----\n");
+printf("1.insert\n2.count nodes\n3.exit\n");
+printf("enter option: ");
+scanf("%d",&x);
+return x;
+}
+
+struct bst *insert(int x,struct bst *t){
+if(t==NULL){
+temp=(struct bst*)malloc(sizeof(struct bst));
+temp->data=x;
+temp->left=NULL;
+temp->right=NULL;
+return temp;
+}
+if(x<t->data){
+t->left=insert(x,t->left);
+}
+else if(x>t->data){
+t->right=insert(x,t->right);
+}
+else{
+printf("duplicate");
+}
+return t;
+}
+
+int count(struct bst *t){
+if(t==NULL){
+return 0;
+}
+return 1+count(t->left)+count(t->right);
+}
+
+int main(){
+int key,x;
+do{
+key=input();
+if(key==1){
+printf("enter data: ");
+scanf("%d",&x);
+start=insert(x,start);
+}
+else if(key==2){
+printf("number of nodes: %d",count(start));
+}
+}while(key!=3);
+return 0;
+}
+
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+-----menu-----
+1.insert
+2.count nodes
+3.exit
+enter option: 1
+enter data: 50
+
+-----menu-----
+1.insert
+2.count nodes
+3.exit
+enter option: 1
+enter data: 30
+
+-----menu-----
+1.insert
+2.count nodes
+3.exit
+enter option: 1
+enter data: 70
+
+-----menu-----
+1.insert
+2.count nodes
+3.exit
+enter option: 1
+enter data: 20
+
+-----menu-----
+1.insert
+2.count nodes
+3.exit
+enter option: 1
+enter data: 40
+
+-----menu-----
+1.insert
+2.count nodes
+3.exit
+enter option: 2
+number of nodes: 5
+    </pre>
+</div>
+
+<div class="btn-container">
+<a href="index.html" class="btn">Home</a>
+</div>
+
+</body>
+</html>

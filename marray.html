@@ -1,0 +1,470 @@
+<html>
+<head>
+<title>Multiple Array</title>
+<style>
+ body {
+    font-family: Arial, sans-serif;
+    background:  #e8ebef;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1 {
+    text-align: center;
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    margin: 0;
+  }
+
+  .program {
+    background: white;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 800px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+  }
+
+  .program h2 {
+    color: #4CAF50;
+    margin-top: 0;
+  }
+
+  .question {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  pre {
+    background: #272822;
+    color: #f8f8f2;
+    padding: 10px;
+    border-radius: 5px;
+  }
+     .btn-container {
+    margin-top: 60px;
+  }
+
+  .btn {
+    display: inline-block;
+    background: white;
+    color: #4CAF50;
+    border: none;
+    padding: 15px 35px;
+    margin: 15px;
+    font-size: 20px;
+    border-radius: 8px;
+    
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+  }
+
+  .btn:hover {
+    background: #333;
+    color: white;
+    transition: 0.3s;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Data Structures PROGRAMS</h1>
+<div id="marray" class="program">
+    <h2>Multi-Array Questions</h2>
+<div class="program">
+<p class="question">1.Write a program to enter a martix from the user and display it</p>
+<pre>
+<xmp>
+#include<stdio.h>
+int main(){
+    int i,j;
+    int mat[2][2];
+    printf("enter the matrix(2x2): \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            printf("enter: ");
+            scanf("%d",&mat[i][j]);
+        }
+    }
+     printf("Matrix is: \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            printf("%d ",&mat[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+</xmp></pre>
+<h3>Output:</h3>
+    <pre>
+enter the matrix: 
+enter: 1
+enter: 2
+enter: 3
+enter: 4
+Matrix is: 
+1 2
+3 4
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">2.Enter two Matrices from user, add the matrices and display the answer?</p>
+<pre>
+<xmp>
+#include <stdio.h>
+int main(){
+    int mat[2][2],i,j;
+    int mat2[2][2];
+    int add[2][2];
+    printf("enter 1st matrix(2x2): \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            printf("enter: ");
+            scanf("%d",&mat[i][j]);
+        }
+    }
+    printf("enter 2nd matrix(2x2): \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            printf("enter: ");
+            scanf("%d",&mat2[i][j]);
+        }
+    }
+    printf("adition is: \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            add[i][j]=mat2[i][j]+mat[i][j];
+            printf("%d ",add[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}</xmp>
+</pre>
+
+<h3>Output:</h3>
+    <pre>
+enter 1st matrix(2x2): 
+enter: 1
+enter: 2
+enter: 3
+enter: 4
+enter 2nd matrix(2x2): 
+enter: 1
+enter: 2
+enter: 3
+enter: 4
+adition is: 
+2 4
+6 8
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">3.Enter two Matrices from user, subtract the matrices and display the answer?</p>
+<pre>
+<xmp>
+#include <stdio.h>
+int main(){
+    int mat[2][2],i,j;
+    int mat2[2][2];
+    int sub[2][2];
+    printf("enter 1st matrix(2x2): \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            printf("enter: ");
+            scanf("%d",&mat[i][j]);
+        }
+    }
+    printf("enter 2nd matrix(2x2): \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            printf("enter: ");
+            scanf("%d",&mat2[i][j]);
+        }
+    }
+    printf("subtraction is: \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            sub[i][j]=mat2[i][j]-mat[i][j];
+            printf("%d ",sub[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+enter 1st matrix(2x2): 
+enter: 1
+enter: 2
+enter: 3
+enter: 4
+enter 2nd matrix(2x2): 
+enter: 1
+enter: 2
+enter: 3
+enter: 4
+subtraction is: 
+0 0
+0 0
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">4.Enter two Matrices from user, multiply the matrices and display the answer?</p>
+<pre>
+<xmp>
+#include <stdio.h>
+int main(){
+    int mat[2][2],i,j;
+    int mat2[2][2];
+    int mul[2][2];
+    printf("enter 1st matrix(2x2): \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            printf("enter: ");
+            scanf("%d",&mat[i][j]);
+        }
+    }
+    printf("enter 2nd matrix(2x2): \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            printf("enter: ");
+            scanf("%d",&mat2[i][j]);
+        }
+    }
+    printf("multiplication is: \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            mul[i][j]=mat2[i][j]*mat[i][j];
+            printf("%d ",mul[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+</xmp>
+</pre>
+ <h3>Output:</h3>
+    <pre>
+enter 1st matrix(2x2): 
+enter: 1
+enter: 2
+enter: 3
+enter: 4
+enter 2nd matrix(2x2): 
+enter: 1
+enter: 2
+enter: 3
+enter: 4
+multiplication is: 
+1 4
+9 16
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">5.Enter a Matrix from user, copy it in another matrix of same size?</p>
+<pre>
+<xmp>
+#include <stdio.h>
+int main(){
+    int mat[2][2],i,j;
+    int cpy[2][2];
+    printf("enter 1st matrix(2x2): \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            printf("enter: ");
+            scanf("%d",&mat[i][j]);
+        }
+    }
+    printf("copied matrix is: \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            cpy[i][j]=mat[i][j];
+            printf("%d ",cpy[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+</xmp>
+</pre>
+ <h3>Output:</h3>
+    <pre>
+enter 1st matrix(2x2): 
+enter: 1
+enter: 2
+enter: 3
+enter: 4
+copied matrix is: 
+1 2
+3 4
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">6.Enter the Matrix from user, multiply it with a scalar value and display the answer?</p>
+<pre>
+<xmp>
+#include <stdio.h>
+int main(){
+    int mat[2][2],i,j;
+    int scaler;
+    printf("enter 1st matrix(2x2): \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            printf("enter: ");
+            scanf("%d",&mat[i][j]);
+        }
+    }
+    printf("scaler multiplation is: \n");
+    for(i=0;i<2;i++){
+        for(j=0;j<2;j++){
+            scaler=5*mat[i][j];
+            printf("%d ",scaler);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+enter 1st matrix(2x2): 
+enter: 1
+enter: 2
+enter: 3
+enter: 4
+scaler multiplation is: 
+5 10
+15 20
+    </pre>
+</div>
+
+<div class="program">
+<p class="question">7.Create a tic tac toe game using 2D Arrays.</p>
+<pre>
+<xmp>
+#include <stdio.h>
+char mat[3][3]={{' ',' ',' '},{' ',' ',' '},{' ',' ',' '}};
+char win(char p){
+    for(int i=0;i<3;i++){
+        if(mat[i][0]==p&&mat[i][1]==p&&mat[i][2]==p){
+            printf("winner %c\nhahhhhh loser\n",p);
+            return p;
+        }
+        else if(mat[0][i]==p&&mat[1][i]==p&&mat[2][i]==p){
+            printf("winner %c\nhahhhhh loser\n",p);
+            return p;
+        }
+    }
+    if(mat[0][0]==p&&mat[1][1]==p&&mat[2][2]==p||mat[0][2]==p&&mat[1][1]==p&&mat[2][0]==p){
+        printf("winner %c\nhahhhhh loser\n",p);
+        return p;
+    }
+    return ' ';
+}
+int main(){
+    int r,c,count=0;
+    char x,o;
+    printf("welcome to the tic-tac-toe game!\n");
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++){
+            printf("enter the row: ");
+            scanf("%d",&r);
+            printf("enter the column: ");
+            scanf("%d",&c);
+            if(r<1||r>3||c<1||c>3){
+                printf("invalid\n");
+                j--;
+                continue;
+            }
+            if(mat[r-1][c-1]!=' '){
+                printf("already filled\n");
+                j--;
+                continue;
+            }
+            count++;
+            if((count%2)!=0){
+                mat[r-1][c-1]='X';
+            }
+            else if(count%2==0){
+                mat[r-1][c-1]='O';
+            }
+            for(int i=0;i<3;i++){
+                for(int j=0;j<3;j++){
+                    printf("[%c]",mat[i][j]);
+                }
+                printf("\n");
+            }
+            if(count>4){
+                x=win('X');
+                o=win('O');
+                if(x=='X'||o=='O'){
+                    return 0;
+                }
+            }
+        }
+    }
+    printf("draw !!\n");
+    return 0;
+}
+</xmp>
+</pre>
+<h3>Output:</h3>
+    <pre>
+welcome to the tic-tac-toe game!
+enter the row: 2
+enter the column: 2
+[ ][ ][ ]
+[ ][X][ ]
+[ ][ ][ ]
+enter the row: 1
+enter the column: 1
+[O][ ][ ]
+[ ][X][ ]
+[ ][ ][ ]
+enter the row: 1
+enter the column: 3
+[O][ ][X]
+[ ][X][ ]
+[ ][ ][ ]
+enter the row: 2
+enter the column: 1
+[O][ ][X]
+[O][X][ ]
+[ ][ ][ ]
+enter the row: 3
+enter the column: 1
+[O][ ][X]
+[O][X][ ]
+[X][ ][ ]
+winner X
+hahhhhh loser
+    </pre>
+</div>
+
+
+
+<div class="btn-container">
+<a href="index.html" class="btn">Home</a>
+</div>
+
+</body>
+</html>
